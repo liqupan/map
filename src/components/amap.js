@@ -124,7 +124,7 @@ class App extends Component {
         height: 600,
       }}
       >
-        <Map events={this.amapEvents} plugins={this.mapPlugins}>
+        <Map events={this.amapEvents} plugins={this.mapPlugins} amapkey="023cf82ec05aaf904f5d84a4ef43903c">
           <Marker
             events={this.markerEvents}
             position={this.state.position}
