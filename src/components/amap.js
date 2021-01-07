@@ -22,12 +22,12 @@ class App extends Component {
       if (b.length !== 0) {
         this.setState({
           position: e.lnglat,
-          currentLocation: `点在第${b.join('-')}个区域中`
+          currentLocation: `点在第${b.join(',')}个区域中`
         });
       } else {
         this.setState({
           position: e.lnglat,
-          currentLocation: '点不在所话区域中'
+          currentLocation: '点不在所话绘画域中'
         });
       }
     };

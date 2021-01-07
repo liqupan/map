@@ -15,7 +15,7 @@ npm start
 * 区域划分
   * AMap.MouseTool
 * 点的查询
-  * AMap.Marker + AMap.Geocoder
+  * AMap.Marker + AMap.GeometryUtil.isPointInRing方法判断点是否在面内
 * 区域边界拖动编辑
   * AMap.PolyEditor
 
