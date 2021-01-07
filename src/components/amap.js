@@ -5,21 +5,31 @@ class App extends Component {
   constructor() {
     super();
 
+
     //坐标查询
     this.find = (e) => {
       this.setState({
         currentLocation: 'loading...',
         visible: true
       });
-      this.geocoder.getAddress(e.lnglat, (status, result) => {
-        if (status === 'complete' && result.regeocode) {
-          const address = result.regeocode.formattedAddress;
-          this.setState({
-            position: e.lnglat,
-            currentLocation: address
-          });
+      const b = [];
+      this.polygonGroup.map((item, index) => {
+        const a = AMap.GeometryUtil.isPointInRing(e.lnglat, item.getPath());
+        if (a === true) {
+          b.push(index + 1);
         }
       });
+      if (b.length !== 0) {
+        this.setState({
+          position: e.lnglat,
+          currentLocation: `点在第${b.join('-')}个区域中`
+        });
+      } else {
+        this.setState({
+          position: e.lnglat,
+          currentLocation: '点不在所话区域中'
+        });
+      }
     };
 
     //map插件
@@ -37,6 +47,7 @@ class App extends Component {
       created: (mapInstance) => {
         this.map = mapInstance;
         this.polylineEditor = [];
+        this.polygonGroup = [];
         //RangingTool 插件
         mapInstance.plugin(['AMap.RangingTool'], () => {
           this.ruler = new AMap.RangingTool(mapInstance);
@@ -46,7 +57,7 @@ class App extends Component {
         mapInstance.plugin(['AMap.MouseTool'], () => {
           this.mouseTool = new AMap.MouseTool(mapInstance);
           AMap.event.addListener(this.mouseTool, 'draw', (e) => {
-            //PolyEditor 插件
+            this.polygonGroup.push(e.obj);
             mapInstance.plugin(['AMap.PolyEditor'], () => {
               this.polylineEditor.push(new AMap.PolyEditor(mapInstance, e.obj));
             });
@@ -124,7 +135,7 @@ class App extends Component {
         height: 600,
       }}
       >
-        <Map events={this.amapEvents} plugins={this.mapPlugins} amapkey="023cf82ec05aaf904f5d84a4ef43903c">
+        <Map events={this.amapEvents} plugins={this.mapPlugins}>
           <Marker
             events={this.markerEvents}
             position={this.state.position}
